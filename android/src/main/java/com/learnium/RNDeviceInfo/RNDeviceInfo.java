@@ -1,39 +1,45 @@
 package com.learnium.RNDeviceInfo;
 
-import com.facebook.react.ReactPackage;
-import com.facebook.react.bridge.JavaScriptModule;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
+import com.facebook.react.TurboReactPackage;
 import com.facebook.react.bridge.NativeModule;
 import com.facebook.react.bridge.ReactApplicationContext;
-import com.facebook.react.uimanager.ViewManager;
+import com.facebook.react.module.model.ReactModuleInfo;
+import com.facebook.react.module.model.ReactModuleInfoProvider;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
-import javax.annotation.Nonnull;
+public class RNDeviceInfo extends TurboReactPackage {
 
-@SuppressWarnings("unused")
-public class RNDeviceInfo implements ReactPackage {
+    @Nullable
+    @Override
+    public NativeModule getModule(@NonNull String s, @NonNull ReactApplicationContext reactApplicationContext) {
+        if (RNDeviceModule.NAME.equals(s))
+            return new RNDeviceModule(reactApplicationContext);
+        return null;
+    }
 
-  @Override
-  @Nonnull
-  public List<NativeModule> createNativeModules(@Nonnull ReactApplicationContext reactContext) {
-    List<NativeModule> modules = new ArrayList<>();
-
-    modules.add(new RNDeviceModule(reactContext));
-
-    return modules;
-  }
-
-  // Deprecated RN 0.47
-  public List<Class<? extends JavaScriptModule>> createJSModules() {
-    return Collections.emptyList();
-  }
-
-  @Override
-  @Nonnull
-  public List<ViewManager> createViewManagers(@Nonnull ReactApplicationContext reactContext) {
-    return Collections.emptyList();
-  }
+    @Override
+    public ReactModuleInfoProvider getReactModuleInfoProvider() {
+        return () -> {
+            final Map<String, ReactModuleInfo> moduleInfo = new HashMap<>();
+            boolean isTurboModule = BuildConfig.IS_NEW_ARCHITECTURE_ENABLED;
+            moduleInfo.put(
+                    RNDeviceModule.NAME,
+                    new ReactModuleInfo(
+                            RNDeviceModule.NAME,
+                            RNDeviceModule.NAME,
+                            false, // canOverrideExistingModule
+                            false, // needsEagerInit
+                            true, // hasConstants
+                            false, // isCxxModule
+                            isTurboModule // isTurboModule
+                    ));
+            return moduleInfo;
+        };
+    }
 
 }
