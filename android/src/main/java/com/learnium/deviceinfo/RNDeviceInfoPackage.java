@@ -34,8 +34,8 @@ public class RNDeviceInfoPackage extends BaseReactPackage {
                                 NativeDeviceInfoSpec.NAME,
                                 NativeDeviceInfoSpec.NAME,
                                 false,
-                                false,
                                 true,
+                                false,
                                 isTurboModule
                         )
                 );
